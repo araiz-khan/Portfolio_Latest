@@ -1,0 +1,15 @@
+.text-type {
+  display: inline;
+  position: relative;
+}
+
+.text-type__cursor {
+  display: inline-block;
+  opacity: 1;
+  animation: blink 0.7s infinite;
+  margin-left: 2px;
+}
+
+.text-type__cursor--hidden {
+  opacity: 0;
+}
