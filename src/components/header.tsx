@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { Menu, User, Mail, FolderGit, Wrench } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Logo from './Logo';
@@ -118,6 +118,7 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <div className="p-6">
                  <Link href="#top" onClick={(e) => handleNavClick(e, '#top')} className="flex items-center gap-2 mb-8">
                     <Logo className="w-8 h-8 text-xl" />
