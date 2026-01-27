@@ -73,7 +73,7 @@ export default function HeroSection() {
       <Link
           href="#about"
           onClick={handleScrollToAbout}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20 flex items-center justify-center"
           aria-label="Scroll down"
         >
         <ChevronDown className="h-8 w-8 text-primary" />
