@@ -30,8 +30,8 @@ export default function AboutSection() {
                 alt="Profile Avatar"
                 width={150}
                 height={150}
+                sizes="150px"
                 className="w-[150px] h-[150px] rounded-full object-cover shadow-lg"
-                priority
               />
             </div>
             <p className="text-muted-foreground md:text-lg">
@@ -124,6 +124,7 @@ export default function AboutSection() {
               alt="Profile Avatar"
               width={300}
               height={300}
+              sizes="(min-width: 768px) 300px, 0px"
               className="w-[300px] h-[300px] rounded-full object-cover shadow-lg"
               priority
             />
