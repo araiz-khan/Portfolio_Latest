@@ -26,7 +26,7 @@ export default function AboutSection() {
               className="flex items-center justify-center py-4 md:hidden"
             >
               <Image
-                src="/images/profile-pic.jpeg"
+                src="/images/profile-pic.png"
                 alt="Profile Avatar"
                 width={150}
                 height={150}
@@ -120,7 +120,7 @@ export default function AboutSection() {
             className="hidden items-center justify-center md:flex"
           >
             <Image
-              src="/images/profile-pic.jpeg"
+              src="/images/profile-pic.png"
               alt="Profile Avatar"
               width={300}
               height={300}
