@@ -7,9 +7,9 @@ export const services: Service[] = [
     description: 'Building robust and scalable web applications tailored to your needs.',
   },
   {
-    title: 'Mobile Development',
-    icon: 'Smartphone',
-    description: 'Building responsive and performant mobile applications for both iOS and Android.',
+    title: 'AI Development',
+    icon: 'Cpu',
+    description: 'Designing and integrating AI-driven features and generative models to enhance and automate workflows.',
   },
   {
     title: 'Custom Development',
@@ -54,7 +54,8 @@ export const projects: Project[] = [
     imageUrl: 'https://picsum.photos/seed/fitness-app/600/400',
     imageHint: 'fitness application',
     liveUrl: '#',
-    githubUrl: '#',
+    githubUrl: 'https://github.com/araiz-khan/Pulse-Fitness-App/tree/main',
+    downloadUrl: 'https://github.com/araiz-khan/Pulse-Fitness-App/releases/download/Repo_Owner/Pulse.Fitness.apk',
     industry: 'Health & Fitness',
   },
 ];
@@ -87,11 +88,12 @@ export const bentoCardData: BentoCardData[] = [
     color: '#060010',
     title: 'Fitness Tracker App',
     description: 'A mobile app to log workouts, track progress, and connect with a fitness community.',
-    label: 'Mobile',
+    label: 'Android App',
     imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop&crop=center',
     imageHint: 'fitness workout tracking',
     liveUrl: '#',
-    githubUrl: '#',
+    githubUrl: 'https://github.com/araiz-khan/Pulse-Fitness-App/tree/main',
+    downloadUrl: 'https://github.com/araiz-khan/Pulse-Fitness-App/releases/download/Repo_Owner/Pulse.Fitness.apk',
   },
   {
     color: '#060010',
@@ -100,7 +102,8 @@ export const bentoCardData: BentoCardData[] = [
     label: 'Travel',
     imageUrl: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&h=400&fit=crop&crop=center',
     imageHint: 'travel planning map',
-    liveUrl: '#',
+    liveUrl: 'https://interactravelapp.netlify.app/',
+    githubUrl: 'https://github.com/araiz-khan/Travel-Planner',
   },
   {
     color: '#060010',

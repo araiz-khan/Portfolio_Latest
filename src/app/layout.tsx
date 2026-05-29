@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -20,18 +20,13 @@ const fontLora = Lora({
 export const metadata: Metadata = {
   metadataBase: new URL('https://araiz-khan.vercel.app'),
   title: {
-    default: 'Araiz Khan - Full Stack Developer & Mobile App Developer',
+    default: 'Araiz Khan - Full Stack Developer & AI Developer',
     template: '%s | Araiz Khan',
   },
-  description: 'Experienced Full Stack Developer specializing in Web & Mobile App Development, AI integration, and custom software solutions. Portfolio showcasing Next.js, React, Android, and AI-powered projects.',
-  keywords: ['Araiz Khan', 'Full Stack Developer', 'Mobile App Developer', 'Web Developer', 'Next.js', 'React', 'Android Developer', 'AI Developer', 'Software Engineer', 'Portfolio'],
+  description: 'Experienced Full Stack Developer specializing in Web & AI Development, AI integration, and custom software solutions. Portfolio showcasing Next.js, React, Android, and AI-powered projects.',
+  keywords: ['Araiz Khan', 'Full Stack Developer', 'AI Developer', 'Web Developer', 'Next.js', 'React', 'Android Developer', 'AI Developer', 'Software Engineer', 'Portfolio'],
   authors: [{ name: 'Araiz Khan' }],
   creator: 'Araiz Khan',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -56,6 +51,12 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({

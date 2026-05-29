@@ -6,11 +6,11 @@ import { cn } from '@/lib/utils';
 import TiltedCard from '../TiltedCard';
 
 // A map to dynamically render icons
-import { LayoutTemplate, Smartphone, Code, Rocket } from 'lucide-react';
+import { LayoutTemplate, Cpu, Code, Rocket } from 'lucide-react';
 
 const iconMap: { [key: string]: LucideIcon } = {
   LayoutTemplate,
-  Smartphone,
+  Cpu,
   Code,
   Rocket,
 };

@@ -40,7 +40,7 @@ export default function Header() {
         }
 
         const maxScroll = 300;
-        const minScale = 0.65;
+        const minScale = 0.55;
         const scale = Math.max(minScale, 1 - scrollY / maxScroll);
         setLogoScale(scale);
       });
