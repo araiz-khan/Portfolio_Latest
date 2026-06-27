@@ -95,12 +95,12 @@ export default function Header() {
       )}
     >
       <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
-        <Link href="#top" onClick={(e) => handleNavClick(e, '#top')} className={cn('flex items-center gap-2 transition-all duration-300 ml-5', !isScrolled && 'md:mt-8')}>
+        <Link href="#top" onClick={(e) => handleNavClick(e, '#top')} className={cn('flex items-center gap-2 transition-all duration-300 ml-1 md:ml-5', !isScrolled && 'md:mt-8')}>
           <div 
-            className="transform-gpu transition-transform duration-300 ease-out"
+            className="shrink-0 transform-gpu transition-transform duration-300 ease-out"
             style={{ transform: `scale(${logoScale})` }}
           >
-            <Logo className="md:w-36 md:h-36 md:text-5xl" />
+            <Logo className="w-16 h-16 sm:w-20 sm:h-20 md:w-36 md:h-36" />
           </div>
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
