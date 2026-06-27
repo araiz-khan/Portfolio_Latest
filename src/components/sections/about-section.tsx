@@ -3,19 +3,16 @@ import {
   Mail,
   Phone,
   MapPin,
-  Github,
-  Linkedin,
-  Twitter,
   Download,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { StackOverflowIcon } from '../stackoverflow-icon';
+import { SocialIcon } from '../social-icon';
 
 export default function AboutSection() {
   return (
-    <section id="about" className="w-full py-20 md:py-32 bg-secondary transition-colors duration-300">
+    <section id="about" className="w-full py-20 md:py-32 bg-[var(--projects-bg)] transition-colors duration-300">
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <div className="grid gap-12 md:grid-cols-2 md:gap-16">
           <div className="flex flex-col justify-center space-y-4">
@@ -89,22 +86,22 @@ export default function AboutSection() {
               <div className="flex gap-2">
                 <Button variant="outline" size="icon" className="rounded-full" asChild>
                   <Link href="https://github.com/araiz-khan" target="_blank" rel="noopener noreferrer" aria-label="Visit GitHub profile">
-                    <Github className="h-5 w-5" />
+                    <SocialIcon brand="github" className="h-5 w-5" />
                   </Link>
                 </Button>
                 <Button variant="outline" size="icon" className="rounded-full" asChild>
                   <Link href="https://www.linkedin.com/in/araiz-khan/" target="_blank" rel="noopener noreferrer" aria-label="Visit LinkedIn profile">
-                    <Linkedin className="h-5 w-5" />
+                    <SocialIcon brand="linkedin" className="h-5 w-5" />
                   </Link>
                 </Button>
                 <Button variant="outline" size="icon" className="rounded-full" asChild>
                   <Link href="https://x.com/araiz_exe" target="_blank" rel="noopener noreferrer" aria-label="Visit X (Twitter) profile">
-                    <Twitter className="h-5 w-5" />
+                    <SocialIcon brand="x" className="h-5 w-5" />
                   </Link>
                 </Button>
                 <Button variant="outline" size="icon" className="rounded-full" asChild>
                   <Link href="https://stackoverflow.com/users/21872928/araiz-khan" target="_blank" rel="noopener noreferrer" aria-label="Visit Stack Overflow profile">
-                    <StackOverflowIcon className="h-5 w-5" />
+                    <SocialIcon brand="stackoverflow" className="h-5 w-5" />
                   </Link>
                 </Button>
               </div>

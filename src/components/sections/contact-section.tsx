@@ -2,8 +2,9 @@
 
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
-import { Github, Linkedin, Mail, MapPin, Phone, Twitter } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 import Link from 'next/link';
+import { SocialIcon } from '@/components/social-icon';
 
 const ContactForm = dynamic(() => import('@/components/contact-form').then(mod => ({ default: mod.ContactForm })), {
   ssr: false,
@@ -56,13 +57,13 @@ export default function ContactSection() {
 
             <div className="flex space-x-4 pt-4">
               <Button variant="outline" size="icon" asChild className="rounded-full">
-                <Link href="https://github.com/araiz-khan" target="_blank" rel="noopener noreferrer" aria-label="Visit GitHub profile"><Github className="h-5 w-5" /></Link>
+                <Link href="https://github.com/araiz-khan" target="_blank" rel="noopener noreferrer" aria-label="Visit GitHub profile"><SocialIcon brand="github" className="h-5 w-5" /></Link>
               </Button>
               <Button variant="outline" size="icon" asChild className="rounded-full">
-                <Link href="https://www.linkedin.com/in/araiz-khan/" target="_blank" rel="noopener noreferrer" aria-label="Visit LinkedIn profile"><Linkedin className="h-5 w-5" /></Link>
+                <Link href="https://www.linkedin.com/in/araiz-khan/" target="_blank" rel="noopener noreferrer" aria-label="Visit LinkedIn profile"><SocialIcon brand="linkedin" className="h-5 w-5" /></Link>
               </Button>
               <Button variant="outline" size="icon" asChild className="rounded-full">
-                <Link href="https://x.com/araiz_exe" target="_blank" rel="noopener noreferrer" aria-label="Visit X (Twitter) profile"><Twitter className="h-5 w-5" /></Link>
+                <Link href="https://x.com/araiz_exe" target="_blank" rel="noopener noreferrer" aria-label="Visit X (Twitter) profile"><SocialIcon brand="x" className="h-5 w-5" /></Link>
               </Button>
             </div>
           </div>

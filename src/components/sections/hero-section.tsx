@@ -35,9 +35,9 @@ export default function HeroSection() {
         <div className="grid items-center gap-12 md:grid-cols-1">
           <div className="flex flex-col justify-center space-y-6 text-center">
             <div className="space-y-4">
-              <p className="font-body text-lg font-semibold text-primary/80">Hi, I'm Araiz Khan</p>
+              <h1 className="font-body text-lg font-semibold text-primary/80">Hi, I&apos;m Araiz Khan</h1>
               <TextType
-                as="h1"
+                as="h2"
                 text={[
                   "I Build Modern Web Experiences",
                   "I Engineer Scalable Solutions",

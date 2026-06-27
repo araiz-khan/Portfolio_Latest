@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
-import { Menu, User, Mail, FolderGit, Wrench } from 'lucide-react';
+import { Menu, User, Mail, FolderGit, Wrench, Code2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Logo from './Logo';
 import { ThemeToggle } from './theme-toggle';
@@ -15,6 +15,7 @@ gsap.registerPlugin(ScrollToPlugin);
 
 const navItems = [
   { href: '#about', label: 'About', icon: User },
+  { href: '#skills', label: 'Skills', icon: Code2 },
   { href: '#services', label: 'Services', icon: Wrench },
   { href: '#projects', label: 'Projects', icon: FolderGit },
   { href: '#contact', label: 'Contact', icon: Mail },
@@ -99,7 +100,7 @@ export default function Header() {
             className="transform-gpu transition-transform duration-300 ease-out"
             style={{ transform: `scale(${logoScale})` }}
           >
-            <Logo className="md:w-48 md:h-48 md:text-7xl" />
+            <Logo className="md:w-36 md:h-36 md:text-5xl" />
           </div>
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
@@ -121,7 +122,7 @@ export default function Header() {
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <div className="p-6">
                  <Link href="#top" onClick={(e) => handleNavClick(e, '#top')} className="flex items-center gap-2 mb-8">
-                    <Logo className="w-8 h-8 text-xl" />
+                  <Logo className="w-7 h-7 text-lg" />
                 </Link>
                 <nav className="flex flex-col gap-6">
                   {navItems.map((item) => (

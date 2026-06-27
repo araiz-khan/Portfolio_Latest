@@ -1,88 +1,91 @@
 "use client";
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
+import { motion, type Variants } from "framer-motion";
 import Logo from "./Logo";
-import { useTheme } from 'next-themes';
+
+// Each stroke of the AK monogram. Drawn in order with framer's pathLength so the
+// animation is reliable regardless of font (no fragile stroke-dash math).
+const STROKES = [
+  "M26 124 L58 30 L90 124", // A — left leg up to apex, down right leg
+  "M120 30 L120 124",       // K — stem
+  "M120 80 L172 30",        // K — upper arm
+  "M120 80 L174 124",       // K — lower arm
+];
+
+const drawVariants: Variants = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: (i: number) => ({
+    pathLength: 1,
+    opacity: 1,
+    transition: {
+      pathLength: { delay: i * 0.08, duration: 0.38, ease: "easeInOut" },
+      opacity: { delay: i * 0.08, duration: 0.05 },
+    },
+  }),
+};
 
 export default function Preloader({ onComplete }: { onComplete: () => void }) {
-  const [showText, setShowText] = useState(false);
-  const { theme } = useTheme();
-
   useEffect(() => {
-    // Reduce animation duration on mobile or slow connection
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const textDelay = isMobile ? 600 : 800;
-    const completeDelay = isMobile ? 1500 : 2000;
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const complete = isMobile ? 1200 : 1350;
 
-    // After text delay, show the text next to logo
-    const timer1 = setTimeout(() => {
-      setShowText(true);
-    }, textDelay);
-
-    // After showing text, morph logo to header (keep text visible)
-    const timer2 = setTimeout(() => {
-      onComplete();
-    }, completeDelay);
-
+    const timer = setTimeout(onComplete, complete);
     return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
+      clearTimeout(timer);
     };
   }, [onComplete]);
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-background overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.8 } }}
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-background"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.45, ease: "easeInOut" } }}
     >
-      <div className="flex items-center gap-6">
-        {/* AK LOGO - Always visible and will morph to header */}
-        <motion.div
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{
-            duration: 0.8,
-            ease: "easeOut",
-            type: "spring",
-            stiffness: 120,
-            damping: 20
-          }}
-        >
-          <Logo className="w-32 h-32 md:w-40 md:h-40 text-6xl md:text-7xl drop-shadow-2xl" />
-        </motion.div>
+      <div className="flex flex-col items-center gap-7">
+        <div className="relative flex h-32 w-44 items-center justify-center md:h-40 md:w-56">
+          <motion.div className="absolute" aria-hidden="true" initial={{ opacity: 0 }} animate={{ opacity: 0 }}>
+            <Logo className="h-28 w-28 md:h-36 md:w-36" />
+          </motion.div>
 
-        {/* ARAIZ KHAN TEXT - Appears next to logo */}
-        <AnimatePresence>
-          {showText && (
-            <motion.h1
-              initial={{
-                opacity: 0,
-                x: -30,
-                scale: 0.8
-              }}
-              animate={{
-                opacity: 1,
-                x: 0,
-                scale: 1
-              }}
-              exit={{
-                opacity: 0,
-                x: 30,
-                scale: 0.8,
-                transition: { duration: 0.4, ease: "easeIn" }
-              }}
-              transition={{
-                duration: 0.6,
-                ease: "easeOut"
-              }}
-              className="text-4xl md:text-6xl font-bold text-foreground tracking-tight"
-            >
-              Araiz Khan
-            </motion.h1>
-          )}
-        </AnimatePresence>
+          {/* Self-drawing AK monogram */}
+          <motion.svg
+            viewBox="0 0 200 150"
+            aria-hidden="true"
+            className="h-auto w-36 overflow-visible md:w-44"
+          >
+            <defs>
+              <linearGradient id="ak-monogram" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="#3b82f6" />
+                <stop offset="1" stopColor="#9333ea" />
+              </linearGradient>
+            </defs>
+            {STROKES.map((d, i) => (
+              <motion.path
+                key={d}
+                d={d}
+                fill="none"
+                stroke="url(#ak-monogram)"
+                strokeWidth={16}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                variants={drawVariants}
+                custom={i}
+                initial="hidden"
+                animate="visible"
+              />
+            ))}
+          </motion.svg>
+        </div>
+
+        {/* Name */}
+        <motion.div
+          className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.45, ease: "easeOut" }}
+        >
+          Araiz Khan
+        </motion.div>
       </div>
     </motion.div>
   );

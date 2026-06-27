@@ -1,4 +1,4 @@
-import type { Project, Service, BentoCardData } from './types';
+import type { Project, Service, BentoCardData, SkillCategory } from './types';
 
 export const services: Service[] = [
   {
@@ -23,6 +23,44 @@ export const services: Service[] = [
   }
 ];
 
+export const skillCategories: SkillCategory[] = [
+  {
+    name: 'Frontend',
+    icon: 'frontend',
+    skills: [
+      { name: 'React', icon: 'react', color: '#61DAFB' },
+      { name: 'Next.js', icon: 'nextjs', color: '#6E7681' },
+      { name: 'TypeScript', icon: 'typescript', color: '#3178C6' },
+      { name: 'JavaScript', icon: 'javascript', color: '#F7DF1E' },
+      { name: 'Tailwind CSS', icon: 'tailwind', color: '#06B6D4' },
+      { name: 'HTML5', icon: 'html5', color: '#E34F26' },
+    ],
+  },
+  {
+    name: 'Backend',
+    icon: 'backend',
+    skills: [
+      { name: 'Node.js', icon: 'nodejs', color: '#5FA04E' },
+      { name: 'Firebase', icon: 'firebase', color: '#FFCA28' },
+      { name: 'MongoDB', icon: 'mongodb', color: '#47A248' },
+      { name: 'SQLite', icon: 'sqlite', color: '#3E8FD0' },
+      { name: 'REST APIs', icon: 'rest', color: '#0EA5E9' },
+    ],
+  },
+  {
+    name: 'AI & Tools',
+    icon: 'aitools',
+    skills: [
+      { name: 'Generative AI', icon: 'genai', color: '#8B5CF6' },
+      { name: 'LLM', icon: 'llm', color: '#10A37F' },
+      { name: 'Custom Model', icon: 'custommodel', color: '#7C3AED' },
+      { name: 'Python', icon: 'python', color: '#3776AB' },
+      { name: 'Git', icon: 'git', color: '#F05032' },
+      { name: 'GitHub', icon: 'github', color: '#6E7681' },
+    ],
+  },
+];
+
 export const projects: Project[] = [
   {
     id: 'project-1',
@@ -34,33 +72,19 @@ export const projects: Project[] = [
     liveUrl: 'https://snaprecipe-ai.netlify.app/',
     industry: 'Food Tech',
   },
-  {
-    id: 'project-2',
-    title: 'Hotel Reservation App',
-    description: 'A user-friendly Android application for hotel reservations, allowing users to browse hotels, check availability, make bookings, and manage reservations seamlessly.',
-    technologies: ['Android', 'Java', 'SQLite', 'Firebase'],
-    imageUrl: 'images/Projects/Alpha Hotels.png',
-    imageHint: 'hotel reservation application',
-    liveUrl: '#',
-    githubUrl: 'https://github.com/araiz-khan/Alpha-Hotels',
-    downloadUrl: 'https://github.com/araiz-khan/Alpha-Hotels/releases/download/App_Release/Alpha_Hotels_2.23.apk',
-    industry: 'Hospitality',
-  },
-  {
-    id: 'project-3',
-    title: 'Fitness Tracker Mobile App',
-    description: 'A cross-platform mobile app for tracking workouts, setting fitness goals, and visualizing progress over time. Includes social features to connect with friends.',
-    technologies: ['React Native', 'GraphQL', 'PostgreSQL'],
-    imageUrl: 'https://picsum.photos/seed/fitness-app/600/400',
-    imageHint: 'fitness application',
-    liveUrl: '#',
-    githubUrl: 'https://github.com/araiz-khan/Pulse-Fitness-App/tree/main',
-    downloadUrl: 'https://github.com/araiz-khan/Pulse-Fitness-App/releases/download/Repo_Owner/Pulse.Fitness.apk',
-    industry: 'Health & Fitness',
-  },
 ];
 
 export const bentoCardData: BentoCardData[] = [
+  {
+    color: '#060010',
+    title: 'Fashion Frenzy',
+    description: 'A full-stack AI virtual try-on web app integrating a Diffusion-based (D-VTON) pipeline — Next.js frontend with a MongoDB backend, with AI generation optimized to 11–14 seconds.',
+    label: 'Virtual Try-On',
+    imageUrl: '/images/Projects/FashionFrenzy.jpg',
+    imageHint: 'AI virtual try-on fashion app',
+    liveUrl: 'https://fashionfr.netlify.app/',
+    githubUrl: 'https://github.com/araiz-khan/Fashion-Frenzy',
+  },
   {
     color: '#060010',
     title: 'AI Recipe Generator',
@@ -72,28 +96,6 @@ export const bentoCardData: BentoCardData[] = [
     githubUrl: 'https://github.com/araiz-khan/SnapRecipe',
     width: 1200,
     height: 700,
-  },
-  {
-    color: '#060010',
-    title: 'Hotel Reservation App',
-    description: 'User-friendly hotel booking app with seamless reservation management and real-time availability.',
-    label: 'Android App',
-    imageUrl: '/images/Projects/Alpha Hotels.png',
-    imageHint: 'hotel reservation mobile app',
-    liveUrl: '#',
-    githubUrl: 'https://github.com/araiz-khan/Alpha-Hotels',
-    downloadUrl: 'https://github.com/araiz-khan/Alpha-Hotels/releases/download/App_Release/Alpha_Hotels_2.23.apk',
-  },
-  {
-    color: '#060010',
-    title: 'Fitness Tracker App',
-    description: 'A mobile app to log workouts, track progress, and connect with a fitness community.',
-    label: 'Android App',
-    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop&crop=center',
-    imageHint: 'fitness workout tracking',
-    liveUrl: '#',
-    githubUrl: 'https://github.com/araiz-khan/Pulse-Fitness-App/tree/main',
-    downloadUrl: 'https://github.com/araiz-khan/Pulse-Fitness-App/releases/download/Repo_Owner/Pulse.Fitness.apk',
   },
   {
     color: '#060010',

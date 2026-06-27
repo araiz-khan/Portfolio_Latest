@@ -6,6 +6,18 @@ export type Service = {
   description: string;
 };
 
+export type Skill = {
+  name: string;
+  icon: string;   // key into the component's iconMap
+  color: string;  // brand hex, used for the hover state
+};
+
+export type SkillCategory = {
+  name: string;
+  icon: string;   // key into the category iconMap (lucide)
+  skills: Skill[];
+};
+
 export type Project = {
   id: string;
   title: string;

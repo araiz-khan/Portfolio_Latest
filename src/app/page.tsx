@@ -8,6 +8,7 @@ import Footer from '@/components/footer';
 
 const HeroSection = dynamic(() => import('@/components/sections/hero-section'), { ssr: true });
 const AboutSection = dynamic(() => import('@/components/sections/about-section'), { ssr: true });
+const SkillsSection = dynamic(() => import('@/components/sections/skills-section'), { ssr: true });
 const ServicesSection = dynamic(() => import('@/components/sections/services-section'), { ssr: true });
 const ProjectsSection = dynamic(() => import('@/components/sections/projects-section'), { ssr: true });
 const ContactSection = dynamic(() => import('@/components/sections/contact-section'), { ssr: true });
@@ -31,6 +32,10 @@ export default function Home() {
            <main className="flex-1">
              <HeroSection />
              <AboutSection />
+             <SkillsSection />
+             <div className="mx-auto max-w-7xl px-4 md:px-6">
+               <div className="h-px w-full bg-border" />
+             </div>
              <ServicesSection />
              <ProjectsSection />
              <ContactSection />

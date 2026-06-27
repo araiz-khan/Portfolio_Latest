@@ -31,24 +31,24 @@
     --chart-5: 27 87% 67%;
   }
   .dark {
-    --background: 224 71.4% 4.1%;
+    --background: 0 0% 0%;
     --foreground: 0 0% 95%;
-    --card: 222 84% 6.9%;
+    --card: 0 0% 3%;
     --card-foreground: 0 0% 95%;
-    --popover: 222 84% 4.9%;
+    --popover: 0 0% 3%;
     --popover-foreground: 0 0% 95%;
-    --primary: 0 0% 90%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 222 84% 5.5%;
+    --primary: 0 0% 95%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 4%;
     --secondary-foreground: 0 0% 95%;
-    --muted: 222 84% 14.9%;
-    --muted-foreground: 0 0% 70%;
-    --accent: 222 84% 14.9%;
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 62%;
+    --accent: 0 0% 9%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 222 84% 14.9%;
-    --input: 222 84% 14.9%;
+    --border: 0 0% 12%;
+    --input: 0 0% 12%;
     --ring: 0 0% 83.1%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -72,15 +72,15 @@
     @apply font-headline;
   }
 
-  /* Section-scoped backgrounds */
-  .projects-section {
-    /* Matches the provided light-mode color */
+  /* Shared alternate-section background (About + Featured Projects) */
+  :root {
+    /* Light-mode alternate section tone */
     --projects-bg: #f3f3f3;
   }
 
-  .dark .projects-section {
-    /* Matches the provided deep blue tone for Featured Projects */
-    --projects-bg: #050b1d;
+  .dark {
+    /* Pitch-black alternate section tone */
+    --projects-bg: #050505;
   }
 }
 
