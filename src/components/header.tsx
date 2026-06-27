@@ -95,7 +95,7 @@ export default function Header() {
       )}
     >
       <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
-        <Link href="#top" onClick={(e) => handleNavClick(e, '#top')} className={cn('flex items-center gap-2 transition-all duration-300 ml-1 md:ml-5', !isScrolled && 'md:mt-8')}>
+        <Link href="#top" aria-label="Back to top" onClick={(e) => handleNavClick(e, '#top')} className={cn('flex items-center gap-2 transition-all duration-300 ml-1 md:ml-5', !isScrolled && 'md:mt-8')}>
           <div 
             className="shrink-0 transform-gpu transition-transform duration-300 ease-out"
             style={{ transform: `scale(${logoScale})` }}
@@ -121,7 +121,7 @@ export default function Header() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <div className="p-6">
-                 <Link href="#top" onClick={(e) => handleNavClick(e, '#top')} className="flex items-center gap-2 mb-8">
+                 <Link href="#top" aria-label="Back to top" onClick={(e) => handleNavClick(e, '#top')} className="flex items-center gap-2 mb-8">
                   <Logo className="w-7 h-7 text-lg" />
                 </Link>
                 <nav className="flex flex-col gap-6">

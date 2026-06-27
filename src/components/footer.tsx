@@ -27,7 +27,7 @@ export default function Footer() {
     <footer className="bg-background transition-colors duration-300">
       <div className="container mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-border px-4 py-8 sm:flex-row md:px-6">
         <div className="flex items-center gap-2">
-           <Link href="#top" onClick={scrollToTop}>
+            <Link href="#top" aria-label="Back to top" onClick={scrollToTop}>
             <svg
               viewBox="0 0 200 150"
               fill="none"

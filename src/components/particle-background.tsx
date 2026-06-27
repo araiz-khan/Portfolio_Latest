@@ -24,11 +24,13 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { theme } = useTheme();
 
   useEffect(() => {
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const finalParticleCount = isMobile ? Math.floor(particleCount / 2) : particleCount;
+    const mobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    setIsMobile(mobile);
+    const finalParticleCount = mobile ? Math.max(8, Math.floor(particleCount / 3)) : particleCount;
 
     const newParticles: Particle[] = [];
     for (let i = 0; i < finalParticleCount; i++) {
@@ -46,20 +48,21 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
     if (particles.length > 0 && containerRef.current) {
       setIsLoaded(true);
       const particleElements = containerRef.current.children;
-      gsap.to(containerRef.current, { opacity: 1, duration: 1, delay: 0.5 });
+      gsap.to(containerRef.current, { opacity: 1, duration: 0.5, delay: 0.2 });
       
       const tl = gsap.timeline();
-      tl.to(particleElements, { opacity: 1, duration: 1, stagger: 0.02 });
+      tl.to(particleElements, { opacity: 1, duration: 0.6, stagger: 0.01 });
       
       particles.forEach((particle, i) => {
         const pEl = particleElements[i] as HTMLElement;
         if (pEl) {
-          const duration = gsap.utils.random(10, 30);
-          const delay = gsap.utils.random(0, 15);
+          const duration = isMobile ? gsap.utils.random(16, 28) : gsap.utils.random(10, 30);
+          const delay = isMobile ? gsap.utils.random(0, 8) : gsap.utils.random(0, 15);
+          const movement = isMobile ? 3 : 5;
           
           tl.to(pEl, {
-            x: () => `${gsap.utils.random(particle.x - 5, particle.x + 5)}vw`,
-            y: () => `${gsap.utils.random(particle.y - 5, particle.y + 5)}vh`,
+            x: () => `${gsap.utils.random(particle.x - movement, particle.x + movement)}vw`,
+            y: () => `${gsap.utils.random(particle.y - movement, particle.y + movement)}vh`,
             opacity: () => gsap.utils.random(0.1, 0.6),
             duration: duration,
             ease: 'power1.inOut',
@@ -68,8 +71,12 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
           }, delay);
         }
       });
+
+      return () => {
+        tl.kill();
+      };
     }
-  }, [particles]);
+  }, [particles, isMobile]);
 
   useEffect(() => {
     if (!containerRef.current || !isLoaded) return;
@@ -80,17 +87,18 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
       const primaryColor = computedStyle.getPropertyValue('--primary').trim();
       const foregroundColor = computedStyle.getPropertyValue('--foreground').trim();
       const newColor = theme === 'dark' ? `hsl(${primaryColor})` : `hsl(${foregroundColor})`;
+      const particleNodes = containerRef.current?.querySelectorAll('.particle') ?? [];
       
-      gsap.to('.particle', { 
+      gsap.to(particleNodes, { 
         backgroundColor: newColor, 
-        boxShadow: `0 0 10px ${newColor}, 0 0 15px ${newColor}`,
+        boxShadow: isMobile ? `0 0 6px ${newColor}` : `0 0 10px ${newColor}, 0 0 15px ${newColor}`,
         duration: 0.5 
       });
     }, 50);
 
     return () => clearTimeout(timeoutId);
 
-  }, [theme, isLoaded]);
+  }, [theme, isLoaded, isMobile]);
 
   return (
     <div

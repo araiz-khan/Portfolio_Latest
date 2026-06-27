@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import dynamic from 'next/dynamic';
 import Preloader from "../components/Preloader";
@@ -16,11 +16,23 @@ const ContactSection = dynamic(() => import('@/components/sections/contact-secti
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const handlePreloaderComplete = () => {
+    setIsLoading(false);
+  };
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <AnimatePresence mode="wait">
         {isLoading && (
-          <Preloader key="loader" onComplete={() => setIsLoading(false)} />
+          <Preloader key="loader" onComplete={handlePreloaderComplete} />
         )}
       </AnimatePresence>
 
@@ -29,7 +41,7 @@ export default function Home() {
            {/* When Preloader unmounts, Header mounts.
                The Logo detects it exists in both and "flies" to the new position. */}
            <Header />
-           <main className="flex-1">
+           <div className="flex-1">
              <HeroSection />
              <AboutSection />
              <SkillsSection />
@@ -39,7 +51,7 @@ export default function Home() {
              <ServicesSection />
              <ProjectsSection />
              <ContactSection />
-           </main>
+           </div>
            <Footer />
         </div>
       )}
