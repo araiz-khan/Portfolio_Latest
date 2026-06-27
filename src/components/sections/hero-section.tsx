@@ -11,6 +11,16 @@ import ParticleBackground from '../particle-background';
 gsap.registerPlugin(ScrollToPlugin);
 
 
+const HERO_PHRASES = [
+  "I Build Modern Web Experiences",
+  "I Engineer Scalable Solutions",
+  "I Create Beautiful Interfaces",
+  "I Solve Complex Problems",
+];
+
+const HERO_TEXT_CLASSES =
+  "text-4xl font-bold tracking-tighter !leading-tight sm:text-5xl md:text-6xl xl:text-7xl";
+
 export default function HeroSection() {
 
   const handleScrollToAbout = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -36,20 +46,28 @@ export default function HeroSection() {
           <div className="flex flex-col justify-center space-y-6 text-center">
             <div className="space-y-4">
               <h1 className="font-body text-lg font-semibold text-primary/80">Hi, I&apos;m Araiz Khan</h1>
-              <TextType
-                as="h2"
-                text={[
-                  "I Build Modern Web Experiences",
-                  "I Engineer Scalable Solutions",
-                  "I Create Beautiful Interfaces",
-                  "I Solve Complex Problems"
-                ]}
-                className="text-4xl font-bold tracking-tighter !leading-tight sm:text-5xl md:text-6xl xl:text-7xl"
-                typingSpeed={50}
-                deletingSpeed={25}
-                pauseDuration={2000}
-                loop={true}
-              />
+              <div className="grid">
+                {/* Invisible sizer: reserves height for the tallest phrase at every
+                    breakpoint so the heading never resizes mid-animation. */}
+                {HERO_PHRASES.map((phrase) => (
+                  <span
+                    key={phrase}
+                    aria-hidden="true"
+                    className={`invisible col-start-1 row-start-1 ${HERO_TEXT_CLASSES}`}
+                  >
+                    {phrase}
+                  </span>
+                ))}
+                <TextType
+                  as="h2"
+                  text={HERO_PHRASES}
+                  className={`col-start-1 row-start-1 ${HERO_TEXT_CLASSES}`}
+                  typingSpeed={50}
+                  deletingSpeed={25}
+                  pauseDuration={2000}
+                  loop={true}
+                />
+              </div>
               <p className="max-w-2xl mx-auto text-muted-foreground md:text-xl">
                 As a dedicated software developer, I specialize in crafting elegant, high-performance web solutions that deliver exceptional user experiences. I transform complex challenges into intuitive and efficient applications that not only meet but exceed user expectations.
               </p>
