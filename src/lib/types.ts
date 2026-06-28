@@ -36,6 +36,7 @@ export interface BentoCardData {
   title?: string;
   description?: string;
   label?: string;
+  technologies?: string[];
   imageUrl?: string;
   imageHint?: string;
   width?: number;

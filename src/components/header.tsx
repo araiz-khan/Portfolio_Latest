@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { Menu, User, Mail, FolderGit, Wrench, Code2 } from 'lucide-react';
@@ -17,7 +18,7 @@ const navItems = [
   { href: '#about', label: 'About', icon: User },
   { href: '#skills', label: 'Skills', icon: Code2 },
   { href: '#services', label: 'Services', icon: Wrench },
-  { href: '#projects', label: 'Projects', icon: FolderGit },
+  { href: '/projects', label: 'Projects', icon: FolderGit },
   { href: '#contact', label: 'Contact', icon: Mail },
 ];
 
@@ -25,6 +26,9 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [logoScale, setLogoScale] = useState(1);
+  const pathname = usePathname();
+  const isHome = pathname === '/';
+  const topHref = isHome ? '#top' : '/';
 
   useEffect(() => {
     let rafId: number;
@@ -59,24 +63,33 @@ export default function Header() {
     }
   }
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-    e.preventDefault();
-    if (targetId === '#top') {
-      gsap.to(window, { scrollTo: 0, duration: 1, ease: 'power2.inOut' });
-    } else {
-      const targetElement = document.querySelector(targetId);
-      if (targetElement) {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {
+    // In-page hash links (only resolved to "#…" when we're already on the homepage):
+    // intercept for smooth GSAP scrolling. Route links ("/projects", "/#about", "/")
+    // fall through to normal Next.js navigation.
+    if (target.startsWith('#')) {
+      e.preventDefault();
+      if (target === '#top') {
+        gsap.to(window, { scrollTo: 0, duration: 1, ease: 'power2.inOut' });
+      } else {
+        const targetElement = document.querySelector(target);
+        if (targetElement) {
           gsap.to(window, { scrollTo: targetElement, duration: 1, ease: 'power2.inOut' });
+        }
       }
     }
     closeMobileMenu();
   };
 
 
-  const NavLink = ({ href, children, isMobile = false }: { href: string; children: React.ReactNode, isMobile?: boolean }) => (
+  const NavLink = ({ href, children, isMobile = false }: { href: string; children: React.ReactNode, isMobile?: boolean }) => {
+    // Hash links only work in-page on the homepage; elsewhere route to "/#section".
+    const isHash = href.startsWith('#');
+    const target = isHash && !isHome ? `/${href}` : href;
+    return (
     <Link
-      href={href}
-      onClick={(e) => handleNavClick(e, href)}
+      href={target}
+      onClick={(e) => handleNavClick(e, target)}
       className={cn(
         "font-medium transition-colors hover:text-primary relative group",
         isMobile ? 'text-lg' : 'text-sm',
@@ -85,7 +98,8 @@ export default function Header() {
       <span>{children}</span>
       <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
     </Link>
-  );
+    );
+  };
 
   return (
     <header
@@ -95,7 +109,7 @@ export default function Header() {
       )}
     >
       <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
-        <Link href="#top" aria-label="Back to top" onClick={(e) => handleNavClick(e, '#top')} className={cn('flex items-center gap-2 transition-all duration-300 ml-1 md:ml-5', !isScrolled && 'md:mt-8')}>
+        <Link href={topHref} aria-label="Back to top" onClick={(e) => handleNavClick(e, topHref)} className={cn('flex items-center gap-2 transition-all duration-300 ml-1 md:ml-5', !isScrolled && 'md:mt-8')}>
           <div 
             className="shrink-0 transform-gpu transition-transform duration-300 ease-out"
             style={{ transform: `scale(${logoScale})` }}
@@ -121,7 +135,7 @@ export default function Header() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <div className="p-6">
-                 <Link href="#top" aria-label="Back to top" onClick={(e) => handleNavClick(e, '#top')} className="flex items-center gap-2 mb-8">
+                 <Link href={topHref} aria-label="Back to top" onClick={(e) => handleNavClick(e, topHref)} className="flex items-center gap-2 mb-8">
                   <Logo className="w-7 h-7 text-lg" />
                 </Link>
                 <nav className="flex flex-col gap-6">
