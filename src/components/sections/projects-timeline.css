@@ -6,7 +6,8 @@
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --text: hsl(var(--foreground));
   --muted: hsl(var(--muted-foreground));
-  --muted-2: hsl(var(--muted-foreground) / 0.7);
+  /* solid (no alpha) so small eyebrow/kicker/meta text clears WCAG AA contrast */
+  --muted-2: hsl(var(--muted-foreground));
   --tl-border: hsl(var(--border));
   --tl-border-strong: hsl(var(--foreground) / 0.16);
   --surface: hsl(var(--card));
