@@ -3,7 +3,7 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 import ProjectsTimeline from '@/components/sections/projects-timeline';
 
-const SITE_URL = 'https://araiz-khan.vercel.app';
+const SITE_URL = 'https://www.araiz.dev';
 
 export const metadata: Metadata = {
   title: 'Projects',

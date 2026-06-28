@@ -319,6 +319,7 @@
 /* card visual */
 .projects-timeline .asc-shot {
   position: relative;
+  aspect-ratio: 16 / 9;
   border-radius: 3px;
   overflow: hidden;
   border: 1px solid var(--tl-border);
@@ -326,9 +327,6 @@
   background: var(--surface-2);
 }
 .projects-timeline .asc-shot img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
   object-fit: cover;
 }
 .projects-timeline .asc-flagtag {

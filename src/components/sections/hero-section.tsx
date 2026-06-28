@@ -6,7 +6,10 @@ import Link from 'next/link';
 import TextType from '../TextType';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import ParticleBackground from '../particle-background';
+import dynamic from 'next/dynamic';
+
+// Decorative-only: load after hydration so it stays off the initial bundle/SSR.
+const ParticleBackground = dynamic(() => import('../particle-background'), { ssr: false });
 
 gsap.registerPlugin(ScrollToPlugin);
 

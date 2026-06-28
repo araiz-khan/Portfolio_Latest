@@ -49,7 +49,16 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
       setIsLoaded(true);
       const particleElements = containerRef.current.children;
       gsap.to(containerRef.current, { opacity: 1, duration: 0.5, delay: 0.2 });
-      
+
+      // Respect reduced-motion: show the field statically, skip the infinite tweens.
+      const reduce =
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) {
+        gsap.to(particleElements, { opacity: 0.35, duration: 0.6, stagger: 0.01 });
+        return;
+      }
+
       const tl = gsap.timeline();
       tl.to(particleElements, { opacity: 1, duration: 0.6, stagger: 0.01 });
       

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type CSSProperties } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowUpRight, ArrowRight, Github } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { bentoCardData } from '@/lib/data';
@@ -244,8 +245,12 @@ export default function ProjectsTimeline({ variant = 'page' }: { variant?: Varia
                 <div className="asc-card">
                   <div className="asc-shot">
                     {i === 0 && <span className="asc-flagtag">Flagship</span>}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.imageUrl} alt={p.imageHint ?? p.title ?? 'Project'} loading="lazy" />
+                    <Image
+                      src={p.imageUrl ?? ''}
+                      alt={p.imageHint ?? p.title ?? 'Project'}
+                      fill
+                      sizes="(max-width: 760px) 90vw, 460px"
+                    />
                   </div>
 
                   <div className="asc-body">

@@ -17,7 +17,8 @@ const fontLora = Lora({
   display: 'swap',
 });
 
-const SITE_URL = 'https://araiz-khan.vercel.app';
+const SITE_URL = 'https://www.araiz.dev';
+const OG_IMAGE = 'https://res.cloudinary.com/dah7ditf3/image/upload/v1782646518/portfolio/og-image.jpg';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -61,7 +62,7 @@ export const metadata: Metadata = {
     siteName: 'Araiz Khan',
     images: [
       {
-        url: '/og-image.jpg',
+        url: OG_IMAGE,
         width: 1200,
         height: 1200,
         alt: 'Araiz Khan — Full Stack & AI Developer',
@@ -74,7 +75,7 @@ export const metadata: Metadata = {
     description:
       'Full Stack & AI Developer based in Lahore, Pakistan — building modern web apps with Next.js, React, MongoDB, and custom AI models.',
     creator: '@araiz_exe',
-    images: ['/og-image.jpg'],
+    images: [OG_IMAGE],
   },
   robots: {
     index: true,
@@ -110,7 +111,7 @@ const jsonLd = {
       givenName: 'Araiz',
       familyName: 'Khan',
       url: SITE_URL,
-      image: `${SITE_URL}/og-image.jpg`,
+      image: OG_IMAGE,
       jobTitle: 'Full Stack & AI Developer',
       description:
         'Full Stack & AI Developer based in Lahore, Pakistan, specializing in Next.js, React, MongoDB, Python, and custom AI models.',
