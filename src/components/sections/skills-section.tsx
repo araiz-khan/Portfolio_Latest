@@ -21,7 +21,7 @@ import { Globe, Sparkles, Bot, BrainCircuit } from 'lucide-react';
 
 // Both lucide and react-icons render `currentColor` SVGs that respect `className`
 // for sizing, so they share one structural type.
-type IconComponent = ComponentType<{ className?: string }>;
+type IconComponent = ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
 
 // Brand logos (react-icons) with lucide fallbacks for skills that have no logo.
 const iconMap: { [key: string]: IconComponent } = {
@@ -71,7 +71,10 @@ export default function SkillsSection() {
                       style={{ ['--brand']: skill.color } as CSSProperties}
                     >
                       {Icon && (
-                        <Icon className="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-[var(--brand)]" />
+                        <Icon
+                          aria-hidden
+                          className="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-[var(--brand)]"
+                        />
                       )}
                       {skill.name}
                     </span>
