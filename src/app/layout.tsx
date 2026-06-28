@@ -158,6 +158,7 @@ const jsonLd = {
       name: 'Araiz Khan — Full Stack & AI Developer',
       isPartOf: { '@id': `${SITE_URL}/#website` },
       about: { '@id': `${SITE_URL}/#araiz-khan` },
+      mainEntity: { '@id': `${SITE_URL}/#araiz-khan` },
       inLanguage: 'en',
     },
   ],
