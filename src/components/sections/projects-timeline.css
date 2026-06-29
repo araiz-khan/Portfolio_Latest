@@ -514,21 +514,26 @@
 
 /* ---- responsive: left spine, single column ---- */
 @media (max-width: 760px) {
-  .projects-timeline { padding-bottom: 80px; }
+  /* clip stray horizontal motion so the page never scrolls sideways */
+  .projects-timeline { padding-bottom: 80px; overflow-x: clip; }
   .projects-timeline .asc-timeline {
     --asc-spine-x: 22px;
     padding: 20px 16px 0 0;
-    margin-top: 18px;
+    /* matches the 76px inter-card gap so the first number (01) has the same
+       breathing room above it as 02–05 — uniform spacing for every numeral */
+    margin-top: 56px;
   }
   .projects-timeline .asc-mile {
     grid-template-columns: 1fr;
-    margin-bottom: 64px;
+    margin-bottom: 76px;
   }
   .projects-timeline .asc-card,
   .projects-timeline .asc-mile.asc-right .asc-card {
     grid-column: 1;
     margin: 0 0 0 52px;
-    transform: translateX(22px);
+    /* fade-only reveal (no slide) so the image never shifts position — this keeps
+       every number's gap to its image identical, and avoids horizontal overflow */
+    transform: none;
     text-align: left;
   }
   .projects-timeline .asc-connector,
@@ -538,12 +543,15 @@
     background: linear-gradient(to right, var(--tl-border-strong), transparent);
     transform-origin: left center;
   }
+  /* index sits in the gap ABOVE the image (never behind it) and stays on-screen.
+     The image is static on mobile, so this fixed offset is uniform for all. */
   .projects-timeline .asc-index,
   .projects-timeline .asc-mile.asc-right .asc-index {
     left: auto;
-    right: 8px;
-    top: -22px;
-    font-size: 4.4rem;
+    right: 12px;
+    top: -2.7rem;
+    font-size: 2.6rem;
+    z-index: 1;
   }
   .projects-timeline .asc-progress {
     margin-right: 16px;

@@ -206,18 +206,8 @@ export default function ProjectsTimeline({ variant = 'page' }: { variant?: Varia
               : "Every project I've shipped, ordered as a journey. Follow the spine as it lights — each node marks a build that moved the craft forward, from first shipped surface to the systems running in production today."}
           </p>
         </div>
-        {/* keep the separator line on both; only show the meta text on the homepage */}
-        <div className="asc-meta">
-          {isHome && (
-            <>
-              <span className="asc-meta-em">Featured</span>
-              <span>
-                {total} of {bentoCardData.length} projects
-              </span>
-              <span>Scroll down</span>
-            </>
-          )}
-        </div>
+        {/* separator line under the header (no meta text) */}
+        <div className="asc-meta" />
       </header>
 
       <div className="asc-timeline">
