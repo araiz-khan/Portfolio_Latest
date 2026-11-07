@@ -23,8 +23,8 @@ export default function AboutSection() {
               className="flex items-center justify-center py-4 md:hidden"
             >
               <Image
-                src="https://res.cloudinary.com/dah7ditf3/image/upload/f_auto,q_auto/portfolio/profile-pic"
-                alt="Profile Avatar"
+                src="/profile.jpg"
+                alt="Araiz Khan"
                 width={150}
                 height={150}
                 sizes="150px"
@@ -117,8 +117,8 @@ export default function AboutSection() {
             className="hidden items-center justify-center md:flex"
           >
             <Image
-              src="https://res.cloudinary.com/dah7ditf3/image/upload/f_auto,q_auto/portfolio/profile-pic"
-              alt="Profile Avatar"
+              src="/profile.jpg"
+              alt="Araiz Khan"
               width={300}
               height={300}
               sizes="(min-width: 768px) 300px, 0px"

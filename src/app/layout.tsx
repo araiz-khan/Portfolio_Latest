@@ -96,6 +96,10 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  // Dark is the default theme, so phones' address bars start dark too
+  // (ThemeProvider updates this if the visitor switches to light).
+  themeColor: '#000000',
+  colorScheme: 'dark light',
 };
 
 // Structured data so search engines recognize "Araiz Khan" as a person entity
@@ -176,9 +180,13 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Dark for every first visit on every device: the OS light/dark
+            setting is ignored, and only a visitor's own toggle (saved in
+            localStorage) changes it. */}
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
+          enableSystem={false}
         >
           {children}
         </ThemeProvider>
