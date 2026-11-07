@@ -82,18 +82,22 @@
   left: calc(50% + var(--role-gap));
 }
 
-/* You: a box with the photo's aspect ratio, bottom-anchored and centred. */
+/* You: a box with the photo's aspect ratio, bottom-anchored and centred.
+   Centred with a negative margin (not a transform) and without its own
+   z-index, so it doesn't form a stacking context: that lets its ::before halo
+   sit *behind* the name while the portrait layer sits in front of it. */
 .hero-person {
+  --person-h: 86cqh;
   position: absolute;
-  z-index: 1;
   bottom: 0;
   left: 50%;
-  height: 86cqh;
+  height: var(--person-h);
   aspect-ratio: 1493 / 2000;
-  translate: -50% 0;
+  margin-left: calc(var(--person-h) * 1493 / 2000 / -2);
 }
 .hero-person-layer {
   position: absolute;
+  z-index: 1;
   inset: 0;
   /* fade out at the bottom into the page instead of being cut off */
   -webkit-mask-image: linear-gradient(to bottom, #000 66%, transparent 98%);
@@ -104,14 +108,53 @@
   object-fit: contain;
   object-position: 50% 100%;
 }
-:root[data-theme='dark'] .hero-person-layer img {
-  filter: brightness(0.94);
+
+/* Soft halo behind your head and shoulders, under the name and the portrait:
+   a faint white glow on the black page, mirrored as a faint black glow on the
+   light page. Neutral, not a coloured glow. */
+.hero-person::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 4% -30% 18% -30%;
+  background: radial-gradient(closest-side, var(--halo-core), var(--halo-mid) 55%, transparent);
+  pointer-events: none;
+  animation: hero-fade-in 1300ms var(--ease-out) 240ms both;
 }
-/* The photo is lit fairly dim; on the bright page that reads as too dark.
-   Lift exposure (mostly shadows/mid-tones via brightness) a touch in light
-   mode only. */
+
+/* Black & white per theme. The photo is lit dim, so in both themes exposure
+   is lifted first (then contrast) to give the face real highlights, and the
+   name is softened so your face is the focal point, not the type.
+   Dark: unadjusted, the face peaked at ~59% white against a 95% name and the
+   navy jacket sank into the black. */
+:root[data-theme='dark'] .hero {
+  --halo-core: hsl(0 0% 100% / 0.1);
+  --halo-mid: hsl(0 0% 100% / 0.04);
+}
+:root[data-theme='dark'] .hero-person-layer img {
+  filter: grayscale(1) brightness(1.28) contrast(1.12);
+}
+:root[data-theme='dark'] .hero-name {
+  color: hsl(var(--foreground) / 0.72);
+}
+/* Light: the full-strength navy name was the heaviest thing in the hero and
+   the face read flat grey on the grey page. The glow uses exactly the same
+   position and shape as dark mode's, inverted to black. */
+:root[data-theme='light'] .hero {
+  /* dark mode's white glow inverted to black, strong enough to stay visible
+     on the light page */
+  --halo-core: hsl(0 0% 0% / 0.4);
+  --halo-mid: hsl(0 0% 0% / 0.16);
+}
+/* Matched to dark mode by measurement, then nudged up: the same photo looks
+   darker on a near-white page than on black, so light mode renders the face
+   ~5% brighter (face median ~144/255 vs 137 in dark) to *look* the same.
+   Stops short of clipping skin highlights (0% at 250+). */
 :root[data-theme='light'] .hero-person-layer img {
-  filter: brightness(1.16) contrast(0.96) saturate(1.06);
+  filter: grayscale(1) brightness(1.34) contrast(1.1);
+}
+:root[data-theme='light'] .hero-name {
+  color: hsl(var(--foreground) / 0.8);
 }
 
 /* ---- Intro + actions, bottom-left ---- */
@@ -269,7 +312,7 @@
     font-size: min(4cqw, 5.4cqh);
   }
   .hero-person {
-    height: 88cqh;
+    --person-h: 88cqh;
   }
   .hero-person-layer {
     -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 94%);
