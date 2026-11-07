@@ -66,12 +66,14 @@ export default function ProjectsTimeline({ variant = 'page' }: { variant?: Varia
       if (curEl.textContent !== String(n)) curEl.textContent = String(n);
     };
 
-    // ---- reveal milestones (fade + slide) ----
+    // ---- reveal milestones (fade + slide), once each ----
+    // One-time: replaying the reveal on every scroll back made re-reading slow.
     const revealObs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          // toggle (not one-time) so cards fade/slide back out when scrolled away
-          e.target.classList.toggle('asc-revealed', e.isIntersecting);
+          if (!e.isIntersecting) return;
+          e.target.classList.add('asc-revealed');
+          revealObs.unobserve(e.target);
         });
       },
       { root: null, threshold: 0.28, rootMargin: '0px 0px -8% 0px' }
@@ -81,7 +83,7 @@ export default function ProjectsTimeline({ variant = 'page' }: { variant?: Varia
       miles.forEach((m) => m.classList.add('asc-revealed', 'asc-lit'));
       spine.style.bottom = 'auto';
       spine.style.height = `${endOffset()}px`;
-      spineFill.style.height = '100%';
+      spineFill.style.transform = 'scaleY(1)';
       comet.style.display = 'none';
       terminus?.classList.add('is-lit');
       endEl?.classList.add('is-lit');
@@ -96,14 +98,27 @@ export default function ProjectsTimeline({ variant = 'page' }: { variant?: Varia
     let running = false;
     let litCount = 0;
 
+    // Layout is measured only when it can change (mount, resize, content
+    // reflow such as images loading), never per scroll frame: the old code
+    // wrote the spine height and then read every node's position each frame,
+    // forcing a synchronous layout on every scroll tick.
+    let endY = 1;
+    let nodeYs: number[] = [];
+    const measure = () => {
+      const tTop = timeline.getBoundingClientRect().top;
+      endY = endOffset();
+      spine.style.bottom = 'auto';
+      spine.style.height = `${endY}px`;
+      nodeYs = nodes.map((node) => {
+        if (!node) return Infinity;
+        const r = node.getBoundingClientRect();
+        return r.top + r.height / 2 - tTop;
+      });
+    };
+
     const computeFill = () => {
       const tRect = timeline.getBoundingClientRect();
       const vh = window.innerHeight || document.documentElement.clientHeight;
-
-      // spine ends just above the closing element; recompute each frame for resizes
-      const endY = endOffset();
-      spine.style.bottom = 'auto';
-      spine.style.height = `${endY}px`;
 
       // Section-relative progress: 0 when the timeline top is low in the viewport,
       // 1 once its end (the terminus) rises to the read line. Works whether this
@@ -117,7 +132,8 @@ export default function ProjectsTimeline({ variant = 'page' }: { variant?: Varia
       frac = Math.max(0, Math.min(1, frac));
 
       const fillH = endY * frac;
-      spineFill.style.height = `${fillH}px`;
+      // A transform, not height: composited, no layout per frame.
+      spineFill.style.transform = `scaleY(${frac})`;
 
       // comet rides the fill head, then hands off to the terminus dot at the end
       if (frac > 0.001 && frac < 0.985) {
@@ -129,11 +145,9 @@ export default function ProjectsTimeline({ variant = 'page' }: { variant?: Varia
 
       let lit = 0;
       for (let i = 0; i < nodes.length; i++) {
-        const node = nodes[i];
-        if (!node) continue;
-        const nodeY = node.getBoundingClientRect().top + node.offsetHeight / 2 - tRect.top;
+        if (!nodes[i]) continue;
         // toggle (not just add) so nodes/numbers go hollow again when you scroll back up
-        const isLit = fillH >= nodeY;
+        const isLit = fillH >= nodeYs[i];
         miles[i].classList.toggle('asc-lit', isLit);
         if (isLit) lit++;
       }
@@ -156,6 +170,10 @@ export default function ProjectsTimeline({ variant = 'page' }: { variant?: Varia
         ticking = false;
       });
     };
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
 
     // gate scroll work on section visibility
     const visObs = new IntersectionObserver(
@@ -164,25 +182,36 @@ export default function ProjectsTimeline({ variant = 'page' }: { variant?: Varia
         if (vis && !running) {
           running = true;
           window.addEventListener('scroll', onScroll, { passive: true });
-          window.addEventListener('resize', onScroll, { passive: true });
+          window.addEventListener('resize', onResize, { passive: true });
+          measure();
           computeFill();
         } else if (!vis && running) {
           running = false;
           window.removeEventListener('scroll', onScroll);
-          window.removeEventListener('resize', onScroll);
+          window.removeEventListener('resize', onResize);
         }
       },
       { root: null, threshold: 0 }
     );
 
     visObs.observe(root);
-    requestAnimationFrame(computeFill);
+    // Content can reflow without a window resize (images, fonts): re-measure.
+    const sizeObs = new ResizeObserver(() => {
+      measure();
+      computeFill();
+    });
+    sizeObs.observe(timeline);
+    requestAnimationFrame(() => {
+      measure();
+      computeFill();
+    });
 
     return () => {
       revealObs.disconnect();
       visObs.disconnect();
+      sizeObs.disconnect();
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('resize', onResize);
     };
   }, [total]);
 
@@ -292,9 +321,11 @@ export default function ProjectsTimeline({ variant = 'page' }: { variant?: Varia
 
         {isHome ? (
           <div className="asc-end asc-cta">
-            <Link href="/projects" className="asc-cta-btn">
-              View All Projects <ArrowRight />
-            </Link>
+            <Button asChild size="lg" variant="outline" className="asc-cta-glass">
+              <Link href="/projects">
+                View All Projects <ArrowRight />
+              </Link>
+            </Button>
           </div>
         ) : (
           <div className="asc-end asc-coda">

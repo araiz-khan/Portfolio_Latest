@@ -62,21 +62,27 @@ const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
       const tl = gsap.timeline();
       tl.to(particleElements, { opacity: 1, duration: 0.6, stagger: 0.01 });
       
-      particles.forEach((particle, i) => {
+      particles.forEach((_particle, i) => {
         const pEl = particleElements[i] as HTMLElement;
         if (pEl) {
-          const duration = isMobile ? gsap.utils.random(16, 28) : gsap.utils.random(10, 30);
-          const delay = isMobile ? gsap.utils.random(0, 8) : gsap.utils.random(0, 15);
-          const movement = isMobile ? 3 : 5;
-          
+          // Visible, wandering drift: each leg is 5–9s, starts within ~2s, and
+          // picks a fresh target every cycle (repeatRefresh) instead of
+          // shuttling between the same two points. Offsets are relative to the
+          // dot's own spot (it's already placed at left/top), so dots wander
+          // around where they are rather than flying off-screen.
+          const duration = isMobile ? gsap.utils.random(6, 9) : gsap.utils.random(5, 8);
+          const delay = gsap.utils.random(0, 2);
+          const movementX = isMobile ? 10 : 8; // vw
+          const movementY = isMobile ? 8 : 10; // vh
+
           tl.to(pEl, {
-            x: () => `${gsap.utils.random(particle.x - movement, particle.x + movement)}vw`,
-            y: () => `${gsap.utils.random(particle.y - movement, particle.y + movement)}vh`,
-            opacity: () => gsap.utils.random(0.1, 0.6),
-            duration: duration,
-            ease: 'power1.inOut',
+            x: () => `${gsap.utils.random(-movementX, movementX)}vw`,
+            y: () => `${gsap.utils.random(-movementY, movementY)}vh`,
+            opacity: () => gsap.utils.random(0.2, 0.7),
+            duration,
+            ease: 'sine.inOut',
             repeat: -1,
-            yoyo: true,
+            repeatRefresh: true,
           }, delay);
         }
       });

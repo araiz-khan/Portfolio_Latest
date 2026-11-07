@@ -1,0 +1,200 @@
+/* ---------------------------------------------------------------------------
+   Project card (shared by the homepage gallery and /projects) — Apple
+   product-tile style on a glisse glass surface.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --pc-link: #2563eb;
+  --pc-radius: 28px;
+  --pc-inset: 16px;
+}
+:root[data-theme='dark'] {
+  --pc-link: #4c8dff; /* brighter blue for contrast on black */
+}
+
+/* Apple-style text link: blue, trailing chevron that nudges on hover. */
+.pc-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--pc-link);
+  white-space: nowrap;
+  border-radius: 6px;
+  -webkit-user-drag: none;
+}
+.pc-link svg {
+  width: 1.1em;
+  height: 1.1em;
+  transition: transform 200ms var(--ease-out);
+}
+.pc-link--small {
+  font-size: 0.9375rem;
+}
+@media (hover: hover) and (pointer: fine) {
+  .pc-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .pc-link:hover svg {
+    transform: translateX(2px);
+  }
+}
+.pc-link:focus-visible {
+  outline: 2px solid var(--pc-link);
+  outline-offset: 3px;
+}
+
+/* ---- Card ---- */
+.pc-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: var(--pc-radius);
+  overflow: hidden;
+}
+.pc-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 28px 28px 20px;
+}
+.pc-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.pc-flag {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: hsl(var(--foreground));
+  background: hsl(var(--foreground) / 0.08);
+}
+/* Display type: tight leading and negative tracking that grows with size. */
+.pc-title {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 1.625rem;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  color: hsl(var(--foreground));
+}
+.pc-desc {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pc-tech {
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+  color: hsl(var(--muted-foreground) / 0.85);
+}
+.pc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: 0.5rem;
+}
+
+/* Screenshot inset at the bottom with concentric corners
+   (card radius − inset = 28 − 16 = 12px). */
+.pc-shot {
+  position: relative;
+  margin: auto var(--pc-inset) var(--pc-inset);
+  aspect-ratio: 4 / 3;
+  border-radius: calc(var(--pc-radius) - var(--pc-inset));
+  overflow: hidden;
+  background: hsl(var(--foreground) / 0.05);
+  box-shadow: 0 0 0 0.5px hsl(var(--foreground) / 0.1);
+}
+.pc-shot img {
+  object-fit: cover;
+  transition: transform 600ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pc-card:hover .pc-shot img {
+    transform: scale(1.04);
+  }
+}
+
+/* ---- Media on top (homepage gallery) ----
+   Screenshot first, text below. Done with `order` so the title still comes
+   first for screen readers. Actions are pushed to the card's bottom edge so
+   buttons line up across cards with different description lengths. */
+.pc-card--media-top .pc-shot {
+  order: -1;
+  margin: var(--pc-inset) var(--pc-inset) 0;
+}
+.pc-card--media-top .pc-copy {
+  flex: 1;
+  padding: 20px 28px 28px;
+}
+.pc-card--media-top .pc-actions {
+  margin-top: auto;
+  padding-top: 0.75rem;
+}
+
+/* ---- Feature layout (flagship on /projects): side by side when wide ---- */
+@media (min-width: 900px) {
+  .pc-card--feature {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: stretch;
+  }
+  .pc-card--feature .pc-copy {
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 48px 24px 48px 48px;
+  }
+  .pc-card--feature .pc-title {
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    line-height: 1.06;
+    letter-spacing: -0.028em;
+  }
+  .pc-card--feature .pc-desc {
+    font-size: 1.0625rem;
+    -webkit-line-clamp: unset;
+  }
+  .pc-card--feature .pc-shot {
+    margin: var(--pc-inset) var(--pc-inset) var(--pc-inset) 0;
+    aspect-ratio: 16 / 10;
+  }
+
+  /* Feature + media first: screenshot on the left (the wider column), text on
+     the right, vertically centred. */
+  .pc-card--feature.pc-card--media-top {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+  .pc-card--feature.pc-card--media-top .pc-shot {
+    margin: var(--pc-inset) 0 var(--pc-inset) var(--pc-inset);
+  }
+  .pc-card--feature.pc-card--media-top .pc-copy {
+    padding: 48px 48px 48px 40px;
+  }
+  .pc-card--feature.pc-card--media-top .pc-actions {
+    margin-top: 0.5rem;
+    padding-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-shot img,
+  .pc-link svg {
+    transition: none;
+  }
+  .pc-card:hover .pc-shot img {
+    transform: none;
+  }
+}

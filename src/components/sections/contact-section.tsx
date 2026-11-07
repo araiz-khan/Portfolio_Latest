@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
+import { Glass } from 'glisse';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import Link from 'next/link';
 import { SocialIcon } from '@/components/social-icon';
@@ -13,7 +14,7 @@ const ContactForm = dynamic(() => import('@/components/contact-form').then(mod =
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="w-full bg-background py-20 md:py-32 transition-colors duration-300">
+    <section id="contact" className="w-full bg-transparent py-20 md:py-32 transition-colors duration-300">
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <div className="grid gap-12 md:grid-cols-2">
           <div className="space-y-8">
@@ -67,9 +68,9 @@ export default function ContactSection() {
               </Button>
             </div>
           </div>
-          <div className="rounded-lg border bg-card p-8 shadow-sm">
+          <Glass className="rounded-3xl p-8">
             <ContactForm />
-          </div>
+          </Glass>
         </div>
       </div>
     </section>

@@ -39,7 +39,8 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
     <motion.div
       className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-background"
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.45, ease: "easeInOut" } }}
+      // Quick, strong ease-out dismissal (was 450ms ease-in-out).
+      exit={{ opacity: 0, transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] } }}
     >
       <div className="flex flex-col items-center gap-7">
         <div className="relative flex h-32 w-44 items-center justify-center md:h-40 md:w-56">

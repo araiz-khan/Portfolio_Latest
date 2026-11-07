@@ -1,56 +1,94 @@
+"use client"
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
+import { Button as GlassButton, Glass } from "glisse"
 
 import { cn } from "@/lib/utils"
+import { useGlassPress } from "./use-glass-press"
 
-const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-      },
-      size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
-)
+// Same API as the old shadcn Button (variant / size / asChild), rendered with
+// glisse's Liquid Glass button. `default` is the filled primary action; every
+// other variant is clear glass.
+type Variant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+type Size = "default" | "sm" | "lg" | "icon"
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: Variant | null
+  size?: Size | null
   asChild?: boolean
 }
 
+const sizeClasses: Record<Size, string> = {
+  default: "h-10 text-sm [&_svg]:size-4",
+  sm: "h-9 text-[13px] [&_svg]:size-4",
+  lg: "h-12 rounded-3xl text-base [&_svg]:size-5",
+  icon: "h-10 w-10 [&_svg]:size-5",
+}
+
+// Horizontal padding moves onto the inner link for `asChild`, so the whole
+// pill stays clickable.
+const linkPadding: Record<Size, string> = {
+  default: "px-4",
+  sm: "px-3.5",
+  lg: "px-7",
+  icon: "px-0",
+}
+
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
+    const v: Variant = variant ?? "default"
+    const s: Size = size ?? "default"
+    const glassVariant = v === "default" ? "filled" : "glass"
+    const destructive = v === "destructive"
+    // Link buttons get the same press spring + glow as glisse's own Button.
+    const shellRef = React.useRef<HTMLDivElement>(null)
+    useGlassPress(shellRef)
+
+    if (asChild) {
+      // glisse's Button is always a <button>. For links we keep the real
+      // <a>/<Link> (navigation, new tabs, downloads, SEO) inside a glisse Glass
+      // shell that carries the same button styles, refraction and press feel.
+      return (
+        <Glass
+          ref={shellRef}
+          className={cn("lg-button p-0", sizeClasses[s], "font-medium", className)}
+          data-variant={glassVariant === "filled" ? "filled" : undefined}
+          data-destructive={destructive ? "" : undefined}
+          data-icon={s === "icon" ? "only" : undefined}
+        >
+          <Slot
+            ref={ref as React.Ref<HTMLElement>}
+            // Links are natively draggable: holding one and moving starts a URL
+            // drag, which cancels the pointer and kills the press stretch.
+            draggable={false}
+            className={cn(
+              "inline-flex h-full w-full items-center justify-center gap-2 whitespace-nowrap rounded-[inherit] text-inherit no-underline",
+              "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lg-ring)]",
+              linkPadding[s],
+            )}
+            {...(props as React.HTMLAttributes<HTMLElement>)}
+          >
+            {children}
+          </Slot>
+        </Glass>
+      )
+    }
+
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+      <GlassButton
         ref={ref}
+        variant={glassVariant}
+        destructive={destructive}
+        className={cn(sizeClasses[s], s === "icon" ? "" : linkPadding[s], "font-medium", className)}
+        {...(s === "icon" ? { "data-icon": "only" } : {})}
         {...props}
-      />
+      >
+        {children}
+      </GlassButton>
     )
   }
 )
 Button.displayName = "Button"
 
-export { Button, buttonVariants }
+export { Button }

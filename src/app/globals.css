@@ -4,7 +4,9 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* Soft cool gray (not white) so light-mode cards and boxes, which are
+       near-white, clearly stand apart from the page. */
+    --background: 225 20% 93.5%;
     --foreground: 220 40% 15%;
     --card: 0 0% 100%;
     --card-foreground: 220 40% 15%;
@@ -62,9 +64,14 @@
   * {
     @apply border-border;
   }
-  html {
-    @apply scroll-smooth;
+  /* Motion tokens: strong curves (built-in CSS easings are too weak). */
+  :root {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* entering / UI response */
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1); /* moving on screen */
   }
+
+  /* No `scroll-behavior: smooth` on <html>: in-page navigation is animated by
+     GSAP (src/lib/smooth-scroll.ts), and the two fight when both are on. */
   body {
     @apply bg-background text-foreground transition-colors duration-300;
   }
@@ -74,13 +81,14 @@
 
   /* Shared alternate-section background (About + Featured Projects) */
   :root {
-    /* Light-mode alternate section tone */
-    --projects-bg: #f3f3f3;
+    /* Light-mode alternate section tone (translucent so the glass backdrop
+       still shows through) */
+    --projects-bg: rgb(0 0 0 / 0.03);
   }
 
   .dark {
-    /* Pitch-black alternate section tone */
-    --projects-bg: #050505;
+    /* Barely-lifted alternate section tone over the black page */
+    --projects-bg: rgb(255 255 255 / 0.015);
   }
 }
 
@@ -94,11 +102,21 @@
 }
 
 /* Respect user's motion preferences for better mobile performance */
+/* Reduced motion means gentler, not zero: keep fades and colour changes, drop
+   movement. JS-driven motion (smooth scroll, tilt cards, particles, glass
+   press, preloader) checks the same media query in code. */
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .reveal {
+    transform: none;
+  }
+  .scroll-cue {
+    animation: none;
+  }
+  .theme-icon {
+    transform: none !important;
+  }
+  .text-type__cursor {
+    animation: none;
   }
 }
 
@@ -128,5 +146,152 @@
   }
   51%, 100% {
     opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   glisse (Liquid Glass) theme — natural glass
+   Every glass surface (buttons, cards, the contact box, skill pills, inputs,
+   the nav bar) is mostly see-through and defined only by a thin edge: glisse's
+   own rim highlight kept subtle, a hairline outline, and a faint line of light
+   along the top. No sheen, no inner glow, no gradient overlays, no big drop
+   shadows; those read as shaded plastic rather than glass. Variables are set
+   on :root so they win over glisse's zero-specificity :where() defaults.
+   --------------------------------------------------------------------------- */
+:root,
+:root[data-theme='light'] {
+  /* Filled buttons: blue-600, a shade deeper than the logo's #3b82f6 so the
+     colour stays rich and white labels pass WCAG AA contrast (5.2:1). */
+  --lg-fill: #2563eb;
+  --lg-glass: rgb(255 255 255 / 0.45);
+  --lg-glass-active: rgb(255 255 255 / 0.75);
+  --lg-edge: rgb(15 23 42 / 0.1);
+  --lg-drop: transparent;
+  --lg-rim-shine: 0.45;
+  --lg-surface: rgb(255 255 255 / 0.7);
+  --glass-hairline: rgb(15 23 42 / 0.1);
+  --glass-toplight: rgb(255 255 255 / 0.9);
+  /* White glass on a near-white page needs the faintest lift to stay visible. */
+  --glass-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+}
+:root[data-theme='dark'] {
+  --lg-glass: rgb(255 255 255 / 0.06);
+  --lg-glass-active: rgb(255 255 255 / 0.13);
+  --lg-edge: rgb(255 255 255 / 0.16);
+  --lg-drop: transparent;
+  --lg-rim-shine: 0.22;
+  --lg-surface: rgb(24 24 32 / 0.55);
+  --glass-hairline: rgb(255 255 255 / 0.12);
+  --glass-toplight: rgb(255 255 255 / 0.08);
+  --glass-shadow: 0 0 transparent;
+}
+
+/* Performance: glisse bends the backdrop with a live SVG filter on every glass
+   element (Chromium only), and Chrome re-runs those on each scroll frame. Keep
+   the real refraction only in the header, where content scrolls underneath;
+   everywhere else the glass uses a plain (GPU-cheap) blur + saturate. */
+.lg-glass:not(header .lg-glass) {
+  --lg-blur: 14px;
+  --lg-filter: saturate(1.8) !important;
+}
+header .lg-glass {
+  --lg-blur: 10px;
+}
+
+/* The edge, for every glass surface except glisse's tab-bar lens (which draws
+   its own) and filled buttons (below). */
+.lg-glass:not(.lg-tab-lens):not([data-variant='filled']) {
+  box-shadow:
+    inset 0 0 0 0.5px var(--glass-hairline),
+    inset 0 1px 0 var(--glass-toplight),
+    var(--glass-shadow);
+}
+
+/* Light mode: cards and boxes need to separate from the page. They become a
+   clearer near-white surface with a crisper hairline and a very soft lift (no
+   inner shading). Buttons keep the lighter see-through glass above. */
+:root[data-theme='light'] .lg-glass:not(.lg-button):not(.lg-tab-lens):not(.lg-input):not(.glass-field) {
+  /* Frosted, not solid white: a lighter tint of the page. The hairline and the
+     soft lift do most of the separating. */
+  background-color: rgb(255 255 255 / 0.58);
+  box-shadow:
+    inset 0 0 0 0.5px rgb(15 23 42 / 0.11),
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 1px 2px rgb(15 23 42 / 0.05),
+    0 6px 20px -8px rgb(15 23 42 / 0.12);
+}
+/* Fields sit recessed in the white box: page-coloured fill, hairline edge;
+   focus turns them white. */
+:root[data-theme='light'] :is(.lg-input, .glass-field) {
+  background-color: hsl(var(--background));
+  box-shadow: inset 0 0 0 0.5px rgb(15 23 42 / 0.1);
+}
+:root[data-theme='light'] :is(.lg-input, .glass-field):focus-within {
+  background-color: #fff;
+  box-shadow: inset 0 0 0 1px rgb(37 99 235 / 0.45);
+}
+
+/* Filled (blue) buttons: a flat, clean tint with just a hairline edge. */
+.lg-button[data-variant='filled'] {
+  background-image: none;
+  -webkit-backdrop-filter: none; /* opaque fill: blurring behind it is wasted work */
+  backdrop-filter: none;
+  box-shadow:
+    inset 0 0 0 0.5px rgb(255 255 255 / 0.18),
+    inset 0 1px 0 rgb(255 255 255 / 0.18);
+}
+
+/* Link buttons: no native link/image drag (Safari ignores draggable="false" on
+   some descendants), so press-and-drag stretches the glass like a <button>. */
+.lg-button a,
+.lg-button a * {
+  -webkit-user-drag: none;
+}
+
+/* ---- Motion ---------------------------------------------------------------- */
+
+/* Theme toggle icon swap. */
+.theme-icon {
+  transition:
+    transform 200ms var(--ease-out),
+    opacity 200ms var(--ease-out);
+}
+
+/* Hero scroll cue: two gentle nudges after a 3s pause, then it rests (was an
+   endless ease-in bounce on the most-viewed screen). */
+.scroll-cue {
+  animation: scroll-cue-nudge 1.1s var(--ease-out) 3s 2 both;
+}
+@keyframes scroll-cue-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(6px);
+  }
+}
+
+/* Scroll-triggered reveal (see src/components/reveal.tsx): fades and rises
+   12px when it first enters the viewport, staggered via --reveal-delay. */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 500ms var(--ease-out) var(--reveal-delay, 0ms),
+    transform 500ms var(--ease-out) var(--reveal-delay, 0ms);
+}
+.reveal[data-revealed] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Reduce transparency (OS setting): glass becomes a solid, defined surface. */
+@media (prefers-reduced-transparency: reduce) {
+  .lg-glass:not([data-variant='filled']):not(.lg-tab-lens) {
+    background-color: hsl(var(--card)) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    box-shadow: 0 0 0 1px hsl(var(--border)) !important;
   }
 }

@@ -3,11 +3,9 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { smoothScrollTo } from '@/lib/smooth-scroll';
 import { SocialIcon } from './social-icon';
 
-gsap.registerPlugin(ScrollToPlugin);
 
 export default function Footer() {
   const [currentYear, setCurrentYear] = React.useState(new Date().getFullYear());
@@ -20,11 +18,11 @@ export default function Footer() {
 
   const scrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    gsap.to(window, { scrollTo: 0, duration: 1, ease: 'power2.inOut' });
+    smoothScrollTo(0);
   };
 
   return (
-    <footer className="bg-background transition-colors duration-300">
+    <footer className="bg-transparent transition-colors duration-300">
       <div className="container mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-border px-4 py-8 sm:flex-row md:px-6">
         <div className="flex items-center gap-2">
             <Link href="#top" aria-label="Back to top" onClick={scrollToTop}>

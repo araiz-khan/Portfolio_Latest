@@ -4,14 +4,12 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import TextType from '../TextType';
-import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { smoothScrollTo } from '@/lib/smooth-scroll';
 import dynamic from 'next/dynamic';
 
 // Decorative-only: load after hydration so it stays off the initial bundle/SSR.
 const ParticleBackground = dynamic(() => import('../particle-background'), { ssr: false });
 
-gsap.registerPlugin(ScrollToPlugin);
 
 
 const HERO_PHRASES = [
@@ -26,18 +24,18 @@ const HERO_TEXT_CLASSES =
 
 export default function HeroSection() {
 
-  const handleScrollToAbout = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  // In-page links scroll with the shared GSAP scroller (there's no CSS
+  // scroll-behavior: smooth to fall back on).
+  const scrollToSection = (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const aboutSection = document.getElementById('about');
-    if (aboutSection) {
-      gsap.to(window, { scrollTo: aboutSection, duration: 1, ease: 'power2.inOut' });
-    }
+    const section = document.getElementById(id);
+    if (section) smoothScrollTo(section);
   };
 
   return (
     <section 
       id="hero" 
-      className="relative w-full min-h-screen overflow-hidden bg-background transition-colors duration-300 flex flex-col justify-center"
+      className="relative w-full min-h-screen overflow-hidden bg-transparent transition-colors duration-300 flex flex-col justify-center"
       style={{ minHeight: 'max(600px, 100vh)' }}
     >
       <ParticleBackground
@@ -77,13 +75,13 @@ export default function HeroSection() {
             </div>
             <div className="flex flex-col gap-4 sm:flex-row justify-center">
               <Button asChild size="lg">
-                <Link href="#projects">
+                <Link href="#projects" onClick={scrollToSection('projects')}>
                   View My Work
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="#contact">
+                <Link href="#contact" onClick={scrollToSection('contact')}>
                   Get in Touch
                 </Link>
               </Button>
@@ -94,8 +92,8 @@ export default function HeroSection() {
       <div className="absolute bottom-10 left-0 right-0 flex justify-center z-20">
         <Link
           href="#about"
-          onClick={handleScrollToAbout}
-          className="animate-bounce flex items-center justify-center"
+          onClick={scrollToSection('about')}
+          className="scroll-cue flex items-center justify-center"
           aria-label="Scroll down"
         >
           <ChevronDown className="h-8 w-8 text-primary" />

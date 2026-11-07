@@ -41,5 +41,6 @@
   border-radius: 50%;
   will-change: transform, opacity;
   pointer-events: none;
-  filter: blur(2px);
+  /* No filter: blur() — the glow box-shadow already softens each dot, and a
+     filter on 30 independently animating layers is needless GPU work. */
 }

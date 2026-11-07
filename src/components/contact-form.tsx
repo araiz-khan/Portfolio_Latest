@@ -5,11 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Glass, Input } from 'glisse';
 import { useToast } from '@/hooks/use-toast';
 import { sendContactMessage } from '@/app/actions';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Mail, User } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -57,7 +56,17 @@ export function ContactForm() {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="John Doe" {...field} />
+                <Input
+                  className="max-w-none"
+                  icon={<User />}
+                  placeholder="John Doe"
+                  autoComplete="name"
+                  name={field.name}
+                  ref={field.ref}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -70,7 +79,18 @@ export function ContactForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="john.doe@example.com" {...field} />
+                <Input
+                  className="max-w-none"
+                  icon={<Mail />}
+                  type="email"
+                  placeholder="john.doe@example.com"
+                  autoComplete="email"
+                  name={field.name}
+                  ref={field.ref}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -82,14 +102,22 @@ export function ContactForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Message</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Your message here..." className="min-h-[120px]" {...field} />
-              </FormControl>
+              {/* glisse has no textarea, so the message box is a glisse Glass
+                  panel around a plain textarea, styled like its Input. */}
+              <Glass className="glass-field rounded-[20px] px-3.5 py-2.5 transition-colors focus-within:bg-[var(--lg-glass-active)]">
+                <FormControl>
+                  <textarea
+                    placeholder="Your message here..."
+                    className="block min-h-[120px] w-full resize-y border-0 bg-transparent text-sm text-[var(--lg-foreground)] outline-none placeholder:text-[var(--lg-muted)]"
+                    {...field}
+                  />
+                </FormControl>
+              </Glass>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
+        <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
           {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Send Message
         </Button>

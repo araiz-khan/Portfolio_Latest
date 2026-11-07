@@ -1,0 +1,160 @@
+/* ---------------------------------------------------------------------------
+   Featured Work gallery (homepage) — Apple-style horizontal product gallery.
+   Cards line up with the page's content edge but scroll out to the viewport
+   edge; native scroll-snap supplies the platform's own momentum. Card styles
+   live in components/projects/project-card.css.
+   --------------------------------------------------------------------------- */
+
+.projects-gallery {
+  /* Same content edge as the site's `container max-w-7xl px-4 md:px-6`. */
+  --pg-pad: 1rem;
+  --pg-gutter: max(var(--pg-pad), calc((100% - 80rem) / 2 + var(--pg-pad)));
+}
+@media (min-width: 768px) {
+  .projects-gallery {
+    --pg-pad: 1.5rem;
+  }
+}
+
+/* ---- Header (shared with /projects) ---- */
+.pg-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+  margin-bottom: 2.5rem;
+}
+.projects-gallery .pg-head {
+  padding-inline: var(--pg-gutter);
+}
+.pg-kicker {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, #3b82f6, #9333ea);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Display type: tight leading, negative tracking that grows with size. */
+.pg-heading {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: hsl(var(--foreground));
+}
+.pg-lede {
+  margin-top: 0.875rem;
+  max-width: 34rem;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ---- Scroller ---- */
+.pg-scroller {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--pg-gutter);
+  /* vertical room so card shadows and the press swell aren't clipped */
+  padding: 12px var(--pg-gutter) 36px;
+  margin-block: -12px -16px;
+  scrollbar-width: none;
+}
+.pg-scroller::-webkit-scrollbar {
+  display: none;
+}
+.pg-scroller:focus-visible {
+  outline: 2px solid var(--pc-link);
+  outline-offset: -2px;
+  border-radius: var(--pc-radius);
+}
+
+.pg-item {
+  flex: none;
+  width: clamp(270px, 80vw, 380px);
+  scroll-snap-align: start;
+}
+
+/* ---- End card: the way to /projects ---- */
+.pg-endcard {
+  display: block;
+  height: 100%;
+  border-radius: var(--pc-radius);
+  -webkit-user-drag: none;
+}
+.pg-endcard:focus-visible {
+  outline: 2px solid var(--pc-link);
+  outline-offset: 3px;
+}
+.pg-card--end {
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 32px;
+  text-align: center;
+  min-height: 420px;
+  transition: transform 250ms var(--ease-out);
+}
+.pg-end-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 0.5rem;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #3b82f6, #9333ea);
+  box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.2);
+}
+.pg-end-icon svg {
+  width: 24px;
+  height: 24px;
+  transition: transform 250ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pg-endcard:hover .pg-end-icon svg {
+    transform: translateX(3px);
+  }
+  .pg-endcard:hover .pc-link {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+/* Instant press feedback on the whole card (responds on pointer-down). */
+.pg-endcard:active .pg-card--end {
+  transform: scale(0.98);
+  transition: transform 100ms var(--ease-out);
+}
+
+/* ---- Paddles ---- */
+.pg-paddles {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-inline: var(--pg-gutter);
+  margin-top: 0.5rem;
+}
+/* On touch, swiping is the primary control; keep paddles for pointers. */
+@media (hover: none) and (pointer: coarse) {
+  .pg-paddles {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-end-icon svg,
+  .pg-card--end {
+    transition: none;
+  }
+  .pg-endcard:active .pg-card--end {
+    transform: none;
+  }
+}

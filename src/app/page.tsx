@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import dynamic from 'next/dynamic';
 import Preloader from "../components/Preloader";
@@ -13,23 +13,58 @@ const ServicesSection = dynamic(() => import('@/components/sections/services-sec
 const ProjectsSection = dynamic(() => import('@/components/sections/projects-section'), { ssr: true });
 const ContactSection = dynamic(() => import('@/components/sections/contact-section'), { ssr: true });
 
+const PRELOADER_SEEN = 'preloader-seen';
+
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  // The intro plays once per browser session: returning to the page (refresh,
+  // back from /projects) goes straight to content. Skipped entirely under
+  // reduced motion. Layout effect so the skip happens before first paint.
+  useLayoutEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (prefersReducedMotion) {
-      setIsLoading(false);
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem(PRELOADER_SEEN) === '1';
+    } catch {
+      // storage blocked (private mode etc.): just play the intro
     }
+    if (prefersReducedMotion || seen) setIsLoading(false);
   }, []);
 
+  // Arriving with a section hash (e.g. "/#contact" from /projects): the
+  // sections mount after the intro / dynamic import, so the browser's own
+  // anchor jump finds nothing. Once content is up, wait for the target to
+  // exist, then jump there (instant: we're arriving, not moving within a page).
+  useEffect(() => {
+    if (isLoading) return;
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return;
+    let frame = 0;
+    const started = performance.now();
+    const tryScroll = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ block: 'start' });
+        return;
+      }
+      if (performance.now() - started < 4000) frame = requestAnimationFrame(tryScroll);
+    };
+    frame = requestAnimationFrame(tryScroll);
+    return () => cancelAnimationFrame(frame);
+  }, [isLoading]);
+
   const handlePreloaderComplete = () => {
+    try {
+      sessionStorage.setItem(PRELOADER_SEEN, '1');
+    } catch {
+      // ignore
+    }
     setIsLoading(false);
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-transparent text-foreground">
       <AnimatePresence mode="wait">
         {isLoading && (
           <Preloader key="loader" onComplete={handlePreloaderComplete} />

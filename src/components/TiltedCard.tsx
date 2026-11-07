@@ -1,7 +1,7 @@
 'use client';
 
 import type { SpringOptions } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import './TiltedCard.css';
 import { cn } from '@/lib/utils';
@@ -59,10 +59,30 @@ export default function TiltedCard({
     mass: 1
   });
 
-  const [lastY, setLastY] = useState<number>(0);
+  // Kept in refs, not state: setting state on every mousemove re-rendered the
+  // card (and re-fitted the glass panel inside it) dozens of times a second.
+  const lastY = useRef(0);
+  // Tilt only for a real hovering mouse/trackpad, never on touch (a tap fires a
+  // synthetic mouseenter and would leave the card stuck scaled), and not at all
+  // when the visitor asks for reduced motion.
+  const canTilt = useRef(false);
+  useEffect(() => {
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => {
+      canTilt.current = fine.matches && !reduce.matches;
+    };
+    update();
+    fine.addEventListener('change', update);
+    reduce.addEventListener('change', update);
+    return () => {
+      fine.removeEventListener('change', update);
+      reduce.removeEventListener('change', update);
+    };
+  }, []);
 
   function handleMouse(e: React.MouseEvent<HTMLElement>) {
-    if (!ref.current) return;
+    if (!ref.current || !canTilt.current) return;
 
     const rect = ref.current.getBoundingClientRect();
     const offsetX = e.clientX - rect.left - rect.width / 2;
@@ -77,12 +97,13 @@ export default function TiltedCard({
     x.set(e.clientX - rect.left);
     y.set(e.clientY - rect.top);
 
-    const velocityY = offsetY - lastY;
+    const velocityY = offsetY - lastY.current;
     rotateFigcaption.set(-velocityY * 0.6);
-    setLastY(offsetY);
+    lastY.current = offsetY;
   }
 
   function handleMouseEnter() {
+    if (!canTilt.current) return;
     scale.set(scaleOnHover);
     opacity.set(1);
   }

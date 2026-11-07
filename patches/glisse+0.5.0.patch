@@ -1,0 +1,38 @@
+diff --git a/node_modules/glisse/dist/index.cjs b/node_modules/glisse/dist/index.cjs
+index 28f5d34..986a15b 100644
+--- a/node_modules/glisse/dist/index.cjs
++++ b/node_modules/glisse/dist/index.cjs
+@@ -1903,9 +1903,12 @@ const keys = [
+ 	"Home",
+ 	"End"
+ ];
++// Patched (portfolio): slower selection glide. Apple's reposition spring,
++// response 0.4s with glisse's original ~0.92 damping ratio (was 1024 / 58.9,
++// response ~0.2s). Lift spring unchanged.
+ const REST = [
+-	1024,
+-	58.9,
++	247,
++	28.9,
+ 	676,
+ 	47.8
+ ];
+diff --git a/node_modules/glisse/dist/index.js b/node_modules/glisse/dist/index.js
+index 02d488a..b87aec7 100644
+--- a/node_modules/glisse/dist/index.js
++++ b/node_modules/glisse/dist/index.js
+@@ -1902,9 +1902,12 @@ const keys = [
+ 	"Home",
+ 	"End"
+ ];
++// Patched (portfolio): slower selection glide. Apple's reposition spring,
++// response 0.4s with glisse's original ~0.92 damping ratio (was 1024 / 58.9,
++// response ~0.2s). Lift spring unchanged.
+ const REST = [
+-	1024,
+-	58.9,
++	247,
++	28.9,
+ 	676,
+ 	47.8
+ ];
